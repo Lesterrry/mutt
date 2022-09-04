@@ -10,25 +10,6 @@ EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 
-headers = {
-	"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-	"Origin": "https://timetracker.hse.ru",
-	"Content-Type": "application/x-www-form-urlencoded",
-	"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15",
-	"Referer": "https://timetracker.hse.ru/Login.aspx?ReturnUrl=%2f",
-}
-
-data = {
-	"__EVENTTARGET": "ctl00$cplhMainContent$lbLogin",
-	"__EVENTARGUMENT": "",
-	"__VIEWSTATE": "UJckLVRoGXv3oSPq4frGUwpzTOlFubZYHUP2fTztwhO2uDASb13yKrAN/XdTANRC5/AYAA2HRGCE/qOn4HmhZq25/LdkwbpMkl5Zg1fi52ff+m+A",
-	"__VIEWSTATEGENERATOR": "C2EE9ABB",
-	"__EVENTVALIDATION": "91OKamAqj3Jx6vNh3Uxmw2EUS3BPKfjCddehBND3nQNwznkMAIfwqpRXc7A4LvqAbtKU+xRgMNxN4HVI9NxkbpGAQtKJESUtQUSoWdobQ7S568YNcMk0Wazp2eycTGAob128x3ggzEVUwRJIPjl0HCtR1GOFFFRTsJRNcjZ2o5mj7304J7DPQH+MO3et0FXh5zLyO9R5k62Nr25tKfk4YezFmqg=",
-	"ctl00$cplhMainContent$txtEmail": EMAIL,
-	"ctl00$cplhMainContent$txtPassword": PWD,
-	"ctl00$cplhMainContent$ddlOrganizations": "1",
-}
-
 class Group:
 	def __init__(self, title):
 		self.title = title
@@ -59,14 +40,43 @@ def get_date(dow):
 	elif dow == "ВС":
 		return "11"
 
+response = requests.get("https://timetracker.hse.ru/login.aspx")
+if response.status_code != 200:
+	die(f"Round 1: Got {response.status_code} code (expected 200), dying...")
+response = BeautifulSoup(response.text, features="lxml")
+vs = response.find("input", attrs={"id":"__VIEWSTATE"})["value"]
+vsg = response.find("input", attrs={"id":"__VIEWSTATEGENERATOR"})["value"]
+ev = response.find("input", attrs={"id":"__EVENTVALIDATION"})["value"]
+
+headers = {
+	"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+	"Origin": "https://timetracker.hse.ru",
+	"Content-Type": "application/x-www-form-urlencoded",
+	"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15",
+	"Referer": "https://timetracker.hse.ru/login.aspx",
+}
+
+data = {
+	"__EVENTTARGET": "ctl00$cplhMainContent$lbLogin",
+	"__EVENTARGUMENT": "",
+	"__VIEWSTATE": vs,
+	"__VIEWSTATEGENERATOR": vsg,
+	"__EVENTVALIDATION": ev,
+	"ctl00$cplhMainContent$txtEmail": EMAIL,
+	"ctl00$cplhMainContent$txtPassword": PWD,
+	"ctl00$cplhMainContent$ddlOrganizations": "1",
+}
+
 response = requests.post("https://timetracker.hse.ru/login.aspx", headers=headers, data=data, allow_redirects=False)
 if response.status_code != 302:
-	die(f"Got {response.status_code} code (expected 302), dying...")
+	with open("/Users/lesterrry/Кэш/txt2.html", "w") as file:
+		file.write(response.text)
+	die(f"Round 2: Got {response.status_code} code (expected 302), dying...")
 jar = response.cookies
 redirect = response.headers["Location"]
 response = requests.get(redirect, cookies=jar)
 if response.status_code != 200:
-	die(f"Got {response.status_code} code (expected 200), dying...")
+	die(f"Round 3: Got {response.status_code} code (expected 200), dying...")
 
 # with open("/Users/lesterrry/Кэш/txt.html", "r") as file:
 # 	response = file.read()
