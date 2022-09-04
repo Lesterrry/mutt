@@ -1,0 +1,5 @@
+transliterate
+requests
+bs4
+lxml
+ics

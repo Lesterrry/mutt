@@ -2,10 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 import bs4
 from ics import Calendar, Event
+from transliterate import translit
 import ics
+import sys
 
 EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
+GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 
 headers = {
 	"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -41,21 +44,20 @@ def die(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
 	exit(1)
 def get_date(dow):
-	match dow:
-		case "ПН":
-			return "05"
-		case "ВТ":
-			return "06"
-		case "СР":
-			return "07"
-		case "ЧТ":
-			return "08"
-		case "ПТ":
-			return "09"
-		case "СБ":
-			return "10"
-		case "ВС":
-			return "11"
+	if dow == "ПН":
+		return "05"
+	elif dow == "ВТ":
+		return "06"
+	elif dow == "СР":
+		return "07"
+	elif dow == "ЧТ":
+		return "08"
+	elif dow == "ПТ":
+		return "09"
+	elif dow == "СБ":
+		return "10"
+	elif dow == "ВС":
+		return "11"
 
 response = requests.post("https://timetracker.hse.ru/login.aspx", headers=headers, data=data, allow_redirects=False)
 if response.status_code != 302:
@@ -111,5 +113,6 @@ for i in groups:
 		e.end = f"2022-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
 		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
 		c.events.add(e)
-	with open(f"{i.title.split(' ')[0]}.ics", "w") as file:
+	trans = translit(i.title.split(" ")[0], "ru", reversed=True)
+	with open(f"{GLOBAL_CALENDARS_PATH}{trans}.ics", "w") as file:
 		file.writelines(c.serialize_iter())
