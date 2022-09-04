@@ -9,17 +9,20 @@ import sys
 EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
+REPO_URL = "https://github.com/lesterrry/mutt"
 
 class Group:
 	def __init__(self, title):
 		self.title = title
 		self.lectures = []
 class Lecture:
-	def __init__(self, title, dow, start_time, end_time):
+	def __init__(self, title, dow, start_time, end_time, location, lector):
 		self.title = title
 		self.dow = dow
 		self.start_time = start_time
 		self.end_time = end_time
+		self.location = location
+		self.lector = lector
 
 def die(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
@@ -107,11 +110,20 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 			sp = nc.find_all("span")
 			for k in sp:
 				k.replaceWith("")
+			need_append = False
 			for k in a:
 				if k.get("class") == ["discipline"]:
-					txt = k.get_text().strip()
-					groups[index - 1].lectures.append(Lecture(txt, dow, time[0].strip(), time[1].strip()))
-					break
+					discipline = k.get_text().strip()
+					need_append = True
+					aud = None
+					lec = None
+				elif k.get("class") == ["auditory"]:
+					aud = k.get_text()
+				elif k.get("class") == ["user"]:
+					lec = k.get_text()
+			if need_append:
+				lecture = Lecture(discipline, dow, time[0].strip(), time[1].strip(), aud, lec)
+				groups[index - 1].lectures.append(lecture)
 			index += 1
 
 for i in groups:
@@ -121,6 +133,9 @@ for i in groups:
 		e.name = j.title
 		e.begin = f"2022-09-{get_date(j.dow)}T{j.start_time}:00.000000+03:00"
 		e.end = f"2022-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
+		e.location = j.location
+		e.description = j.lector
+		e.url = REPO_URL
 		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
 		c.events.add(e)
 	trans = translit(i.title.split(" ")[0], "ru", reversed=True)
