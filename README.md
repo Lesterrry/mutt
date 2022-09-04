@@ -7,3 +7,5 @@ More Usable Time Tracker
 Mutt delivers events from clumsy [Timetracker](https://timetracker.hse.ru) website straight to your iOS/MacOS calendar. Updates thrice a day.
 ## How to use
 Add a subscription calendar with a link as follows: `https://aydar.media/mutt/<your_group>.ics`, <your_group> being your group name in latin (e.g. `B22DZ08`) 
+## Status
+https://mutt.cronitorstatus.com/
