@@ -15,7 +15,7 @@ EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 REPO_URL = "https://github.com/lesterrry/mutt"
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
@@ -26,7 +26,7 @@ class Group:
 		self.title = title
 		self.lectures = []
 class Lecture:
-	def __init__(self, title, dow, start_time, end_time, location, lector):
+	def __init__(self, title, dow, start_time, end_time, location, lector, desc):
 		self.title = title
 		self.dow = dow
 		self.start_time = start_time
@@ -36,6 +36,10 @@ class Lecture:
 			self.lector = "Нет информации о преподавателе"
 		else:
 			self.lector = "Ведет " + lector
+		if desc is None:
+			self.desc = "Нет доп. информации"
+		else:
+			self.desc = desc
 
 def die(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
@@ -121,7 +125,9 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 			nc = BeautifulSoup(str(cell), features="lxml")
 			a = nc.find_all("div")
 			sp = nc.find_all("span")
+			desc = None
 			for k in sp:
+				desc = k.get_text().replace("\n", "").strip()
 				k.replaceWith("")
 			need_append = False
 			for k in a:
@@ -134,8 +140,13 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 					aud = k.get_text()
 				elif k.get("class") == ["user"]:
 					lec = k.get_text()
+				elif k.get("class") == ["comment"]:
+					if desc is None:
+						desc = k.get_text()
+					else:
+						desc += ("\n" + k.get_text())
 			if need_append:
-				lecture = Lecture(discipline, dow, time[0].strip(), time[1].strip(), aud, lec)
+				lecture = Lecture(discipline, dow, time[0].strip(), time[1].strip(), aud, lec, desc)
 				groups[index - 1].lectures.append(lecture)
 			index += 1
 
@@ -147,7 +158,7 @@ for i in groups:
 		e.begin = f"2022-09-{get_date(j.dow)}T{j.start_time}:00.000000+03:00"
 		e.end = f"2022-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
 		e.location = j.location
-		e.description = j.lector
+		e.description = j.lector + "\n" + j.desc
 		e.url = REPO_URL
 		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
 		c.events.add(e)
