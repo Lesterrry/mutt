@@ -15,6 +15,11 @@ EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 REPO_URL = "https://github.com/lesterrry/mutt"
+VERSION = "v0.1.1"
+
+if "-v" in sys.argv or "--version" in sys.argv:
+	print(f"Mutt v{VERSION}")
+	exit(0)
 
 class Group:
 	def __init__(self, title):
@@ -30,7 +35,7 @@ class Lecture:
 		if lector is None:
 			self.lector = "Нет информации о преподавателе"
 		else:
-			self.lector = "Ведет" + lector
+			self.lector = "Ведет " + lector
 
 def die(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
