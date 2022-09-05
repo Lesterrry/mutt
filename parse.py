@@ -1,3 +1,8 @@
+# COPYRIGHT AYDAR N. (me@aydar.media)
+#
+# 2022
+#
+
 import requests
 from bs4 import BeautifulSoup
 import bs4
@@ -22,7 +27,10 @@ class Lecture:
 		self.start_time = start_time
 		self.end_time = end_time
 		self.location = location
-		self.lector = lector
+		if lector is None:
+			self.lector = "Нет информации о преподавателе"
+		else:
+			self.lector = "Ведет" + lector
 
 def die(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
