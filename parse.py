@@ -13,9 +13,9 @@ import sys
 
 EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
-GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-REPO_URL = "https://github.com/lesterrry/mutt"
-VERSION = "0.1.2"
+GLOBAL_CALENDARS_PATH = "./"
+VERSION = "0.1.3"
+REPO_URL = f"v{VERSION} --> https://github.com/lesterrry/mutt"
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
@@ -108,8 +108,9 @@ groups = []
 for i in response.find("table", attrs={"class":"schedule-table"}).thead.tr:
 	if i.string is not None:
 		continue
-	groups.append(Group(i.b.string))
+	groups.append(Group(translit(i.b.string.split(" ")[0], "ru", reversed=True)))
 
+chief_added = False
 for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 	index = 0
 	for cell in row:
@@ -148,6 +149,13 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 			if need_append:
 				lecture = Lecture(discipline, dow, time[0].strip(), time[1].strip(), aud, lec, desc)
 				groups[index - 1].lectures.append(lecture)
+				# Specific chief's rules go below
+				if groups[index - 1].title == "B22DZ08":
+					if not chief_added:
+						groups.append(Group("chief"))
+						chief_added = True
+					if discipline != "Английский язык (ДОЦ: Английский язык (часть 1))":
+						groups[len(groups) - 1].lectures.append(lecture)
 			index += 1
 
 for i in groups:
@@ -163,5 +171,5 @@ for i in groups:
 		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
 		c.events.add(e)
 	trans = translit(i.title.split(" ")[0], "ru", reversed=True)
-	with open(f"{GLOBAL_CALENDARS_PATH}{trans}.ics", "w") as file:
+	with open(f"{GLOBAL_CALENDARS_PATH}{i.title}.ics", "w") as file:
 		file.writelines(c.serialize_iter())
