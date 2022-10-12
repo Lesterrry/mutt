@@ -13,7 +13,7 @@ import sys
 
 EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
-GLOBAL_CALENDARS_PATH = "./"
+GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.1.3"
 REPO_URL = f"v{VERSION} --> https://github.com/lesterrry/mutt"
 
