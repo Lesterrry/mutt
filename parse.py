@@ -15,7 +15,7 @@ EMAIL = "aanasibullin@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.1.3"
-REPO_URL = f"v{VERSION} --> https://github.com/lesterrry/mutt"
+REPO_URL = "https://github.com/lesterrry/mutt"
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
