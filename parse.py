@@ -11,7 +11,7 @@ from transliterate import translit
 import ics
 import sys
 
-EMAIL = "aanasibullin@edu.hse.ru"
+EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.1.3"
