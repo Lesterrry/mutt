@@ -89,7 +89,7 @@ data = {
 
 response = requests.post("https://timetracker.hse.ru/login.aspx", headers=headers, data=data, allow_redirects=False)
 if response.status_code != 302:
-	with open("/Users/lesterrry/Кэш/txt2.html", "w") as file:
+	with open("./txt.html", "w") as file:
 		file.write(response.text)
 	die(f"Round 2: Got {response.status_code} code (expected 302), dying...")
 jar = response.cookies
@@ -97,9 +97,6 @@ redirect = response.headers["Location"]
 response = requests.get(redirect, cookies=jar)
 if response.status_code != 200:
 	die(f"Round 3: Got {response.status_code} code (expected 200), dying...")
-
-# with open("/Users/lesterrry/Кэш/txt.html", "r") as file:
-# 	response = file.read()
 
 response = BeautifulSoup(response.text, features="lxml")
 
