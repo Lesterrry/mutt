@@ -1,7 +1,7 @@
 # ⌚️ Mutt
 More Usable Time Tracker
 
-![Mutt Parser](https://cronitor.io/badges/MAypum/production/WVrZSIRM3unLDl0QF8MdHQ2zsBo.svg)
+[![Mutt Parser](https://cronitor.io/badges/MAypum/production/WVrZSIRM3unLDl0QF8MdHQ2zsBo.svg)](https://mutt.cronitorstatus.com/)
 
 <img width="500" alt="Снимок экрана 2022-09-04 в 18 30 40" src="https://user-images.githubusercontent.com/45698501/188323768-e45f4e52-55f7-4c15-af88-58e50874541e.jpeg">
 
