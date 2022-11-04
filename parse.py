@@ -14,7 +14,7 @@ import sys
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.1.3"
+VERSION = "0.1.4"
 REPO_URL = "https://github.com/lesterrry/mutt"
 
 if "-v" in sys.argv or "--version" in sys.argv:
