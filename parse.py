@@ -151,7 +151,7 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 					if not chief_added:
 						groups.append(Group("chief"))
 						chief_added = True
-					if discipline != "Английский язык (ДОЦ: Английский язык (часть 1))":
+					if discipline != "Английский язык":
 						groups[len(groups) - 1].lectures.append(lecture)
 			index += 1
 
