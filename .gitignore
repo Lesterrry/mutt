@@ -1,2 +1,3 @@
 *.ics
 *.html
+.DS_Store

@@ -14,7 +14,7 @@ import sys
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.1.4"
+VERSION = "0.1.5"
 REPO_URL = "https://github.com/lesterrry/mutt"
 
 if "-v" in sys.argv or "--version" in sys.argv:
@@ -151,7 +151,7 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 					if not chief_added:
 						groups.append(Group("chief"))
 						chief_added = True
-					if discipline != "Английский язык":
+					if discipline != "Английский язык (ДОЦ: Английский язык (часть 2))":
 						groups[len(groups) - 1].lectures.append(lecture)
 			index += 1
 
