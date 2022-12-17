@@ -15,7 +15,8 @@ EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.1.5"
-REPO_URL = "https://github.com/lesterrry/mutt"
+FINAL_WORD = "Подписка на мой тг канал дает +100 к удаче на сессии ⬇️"
+REPO_URL = "t.me/coveydays"
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
@@ -89,8 +90,8 @@ data = {
 
 response = requests.post("https://timetracker.hse.ru/login.aspx", headers=headers, data=data, allow_redirects=False)
 if response.status_code != 302:
-	with open("./txt.html", "w") as file:
-		file.write(response.text)
+	# with open("./txt.html", "w") as file:
+	# 	file.write(response.text)
 	die(f"Round 2: Got {response.status_code} code (expected 302), dying...")
 jar = response.cookies
 redirect = response.headers["Location"]
@@ -163,7 +164,7 @@ for i in groups:
 		e.begin = f"2022-09-{get_date(j.dow)}T{j.start_time}:00.000000+03:00"
 		e.end = f"2022-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
 		e.location = j.location
-		e.description = j.lector + "\n" + j.desc
+		e.description = f"{j.lector}\n{j.desc}\n\n{FINAL_WORD}"
 		e.url = REPO_URL
 		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
 		c.events.add(e)
