@@ -15,7 +15,7 @@ EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.1.6"
-FINAL_WORD = "[Подписка на мой тг канал дает +100 к удаче на сессии: https://t.me/coveydays]"
+FINAL_WORD = "❇️ Подписка на мой тг канал дает +100 к удаче на сессии: https://t.me/coveydays"
 REPO_URL = "https://timetracker.hse.ru"
 
 if "-v" in sys.argv or "--version" in sys.argv:
