@@ -15,7 +15,7 @@ EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.1.6"
-FINAL_WORD = "❇️ Подписка на мой тг канал дает +100 к удаче на сессии: https://t.me/coveydays"
+FINAL_WORD = "💀 треш, полгода прошло"
 REPO_URL = "https://timetracker.hse.ru"
 
 if "-v" in sys.argv or "--version" in sys.argv:
@@ -152,7 +152,7 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 					if not chief_added:
 						groups.append(Group("chief"))
 						chief_added = True
-					if discipline != "Английский язык (ДОЦ: Английский язык (часть 2))":
+					if "Английский язык" not in discipline:
 						groups[len(groups) - 1].lectures.append(lecture)
 			index += 1
 
