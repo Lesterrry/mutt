@@ -1,6 +1,6 @@
 # COPYRIGHT AYDAR N. (me@aydar.media)
 #
-# 2022
+# 2022 - 2023
 #
 
 import requests
@@ -14,9 +14,10 @@ import sys
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.1.6"
-FINAL_WORD = "💀 треш, полгода прошло"
+VERSION = "0.2.0"
+FINAL_WORD = "🍏 Скоро лето"
 REPO_URL = "https://timetracker.hse.ru"
+FINAL_URL = "https://timetracker.hse.ru/schedule.aspx?organizationId=1&facultyids=1"
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
@@ -95,7 +96,7 @@ if response.status_code != 302:
 	die(f"Round 2: Got {response.status_code} code (expected 302), dying...")
 jar = response.cookies
 redirect = response.headers["Location"]
-response = requests.get(redirect, cookies=jar)
+response = requests.get(FINAL_URL, cookies=jar)
 if response.status_code != 200:
 	die(f"Round 3: Got {response.status_code} code (expected 200), dying...")
 
