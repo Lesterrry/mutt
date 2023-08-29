@@ -14,10 +14,10 @@ import sys
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.2.0"
-FINAL_WORD = "🍏 Скоро лето"
+VERSION = "0.2.1"
+FINAL_WORD = "🥀 снова в школу"
 REPO_URL = "https://timetracker.hse.ru"
-FINAL_URL = "https://timetracker.hse.ru/schedule.aspx?organizationId=1&facultyids=1"
+FINAL_URL = "https://timetracker.hse.ru/schedule.aspx?organizationId=1&facultyids=1&course=2"
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
@@ -162,8 +162,8 @@ for i in groups:
 	for j in i.lectures:
 		e = Event()
 		e.name = j.title
-		e.begin = f"2022-09-{get_date(j.dow)}T{j.start_time}:00.000000+03:00"
-		e.end = f"2022-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
+		e.begin = f"2023-09-{get_date(j.dow)}T{j.start_time}:00.000000+03:00"
+		e.end = f"2023-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
 		e.location = j.location
 		e.description = f"{j.lector}\n{j.desc}\n\n{FINAL_WORD}"
 		e.url = REPO_URL
