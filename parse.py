@@ -159,14 +159,16 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 
 for i in groups:
 	c = Calendar()
-	e = Event()
-	e.name = "Лето!!!"
-	e.begin = f"2023-06-26T00:00:00.000000+03:00"
-	e.end = f"2023-08-31T23:59:00.000000+03:00"
-	e.location = "Не ШД"
-	e.description = "Блин отдыхайте ребята так бог велел"
-	e.url = REPO_URL
-	c.events.add(e)
+	for j in i.lectures:
+		e = Event()
+		e.name = j.title
+		e.begin = f"2022-09-{get_date(j.dow)}T{j.start_time}:00.000000+03:00"
+		e.end = f"2022-09-{get_date(j.dow)}T{j.end_time}:00.000000+03:00"
+		e.location = j.location
+		e.description = f"{j.lector}\n{j.desc}\n\n{FINAL_WORD}"
+		e.url = REPO_URL
+		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
+		c.events.add(e)
 	trans = translit(i.title.split(" ")[0], "ru", reversed=True)
 	with open(f"{GLOBAL_CALENDARS_PATH}{i.title}.ics", "w") as file:
 		file.writelines(c.serialize_iter())
