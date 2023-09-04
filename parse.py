@@ -14,10 +14,12 @@ import sys
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 FINAL_WORD = "🥀 снова в школу"
 REPO_URL = "https://timetracker.hse.ru"
 FINAL_URL = "https://timetracker.hse.ru/schedule.aspx?organizationId=1&facultyids=1&course=2"
+BANLIST = ["История и теория", "Английский язык", "Военная подготовка", "Майнор"]
+BASE_DAY = 4
 
 if "-v" in sys.argv or "--version" in sys.argv:
 	print(f"Mutt v{VERSION}")
@@ -47,20 +49,12 @@ def die(*args, **kwargs):
 	print(*args, file=sys.stderr, **kwargs)
 	exit(1)
 def get_date(dow):
-	if dow == "ПН":
-		return "05"
-	elif dow == "ВТ":
-		return "06"
-	elif dow == "СР":
-		return "07"
-	elif dow == "ЧТ":
-		return "08"
-	elif dow == "ПТ":
-		return "09"
-	elif dow == "СБ":
-		return "10"
-	elif dow == "ВС":
-		return "11"
+	days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
+	day = str(BASE_DAY + days.index(dow))
+	if len(day) == 1:
+		return f"0{day}"
+	else:
+		return day
 
 response = requests.get("https://timetracker.hse.ru/login.aspx")
 if response.status_code != 200:
@@ -146,15 +140,9 @@ for row in response.find("table", attrs={"class":"schedule-table"}).tbody:
 					else:
 						desc += ("\n" + k.get_text())
 			if need_append:
-				lecture = Lecture(discipline, dow, time[0].strip(), time[1].strip(), aud, lec, desc)
-				groups[index - 1].lectures.append(lecture)
-				# Specific chief's rules go below
-				if groups[index - 1].title == "B22DZ08":
-					if not chief_added:
-						groups.append(Group("chief"))
-						chief_added = True
-					if "Английский язык" not in discipline:
-						groups[len(groups) - 1].lectures.append(lecture)
+				if not any(banned in discipline for banned in BANLIST):
+					lecture = Lecture(discipline, dow, time[0].strip(), time[1].strip(), aud, lec, desc)
+					groups[index - 1].lectures.append(lecture)
 			index += 1
 
 for i in groups:
