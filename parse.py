@@ -6,15 +6,16 @@
 import requests
 from bs4 import BeautifulSoup
 import bs4
-from ics import Calendar, Event
-from transliterate import translit
+from ics import Calendar, Event, DisplayAlarm
 import ics
+from transliterate import translit
+from datetime import datetime, timedelta
 import sys
 
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
 GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 FINAL_WORD = "❇️ aydarmedia.t.me"
 REPO_URL = "https://timetracker.hse.ru"
 FINAL_URL = "https://timetracker.hse.ru/schedule.aspx?organizationId=1&facultyids=1&course="
@@ -24,9 +25,19 @@ COURSES = [1, 2]
 
 VERBOSE = "--verbose" in sys.argv
 
-if "-v" in sys.argv or "--version" in sys.argv:
-	print(f"Mutt v{VERSION}")
-	exit(0)
+def log(message):
+	if VERBOSE:
+		print(message)
+def die(message):
+	print(f'FATAL: {message}')
+	exit(1)
+def get_date(dow):
+	days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
+	day = str(BASE_DAY + days.index(dow))
+	if len(day) == 1:
+		return f"0{day}"
+	else:
+		return day
 
 class Group:
 	def __init__(self, title):
@@ -48,19 +59,17 @@ class Lecture:
 		else:
 			self.desc = desc
 
-def log(message):
-	if VERBOSE:
-		print(message)
-def die(message):
-	print(f'FATAL: {message}')
-	exit(1)
-def get_date(dow):
-	days = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
-	day = str(BASE_DAY + days.index(dow))
-	if len(day) == 1:
-		return f"0{day}"
-	else:
-		return day
+if "-v" in sys.argv or "--version" in sys.argv:
+	print(f"Mutt v{VERSION}")
+	exit(0)
+if "--clear-output" in sys.argv:
+	import glob
+	import os
+	out = glob.glob(os.path.join(GLOBAL_CALENDARS_PATH, '*.ics'))
+	for file in out:
+		os.remove(file)
+		log(f'Removed {file}')
+	exit(0)
 
 log('Fetching login form...')
 response = requests.get("https://timetracker.hse.ru/login.aspx")
@@ -177,6 +186,8 @@ for i in [item for sublist in groups.values() for item in sublist]:
 		e.description = f"{j.lector}\n{j.desc}\n\n{FINAL_WORD}"
 		e.url = REPO_URL
 		e.extra.append(ics.grammar.parse.ContentLine(name="RRULE", value="FREQ=WEEKLY;INTERVAL=1"))
+		alarm = DisplayAlarm(trigger=timedelta(minutes=-5), display_text="Бегом учиться!!!")
+		e.alarms.append(alarm)
 		c.events.add(e)
 	trans = translit(i.title.split(" ")[0], "ru", reversed=True)
 	with open(f"{GLOBAL_CALENDARS_PATH}{i.title}.ics", "w") as file:
