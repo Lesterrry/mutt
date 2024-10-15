@@ -14,14 +14,24 @@ import sys
 
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
-GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
-VERSION = "0.3.1"
-FINAL_WORD = "❇️ aydarmedia.t.me"
+GLOBAL_CALENDARS_PATH = "./temp/"
+VERSION = "0.3.2"
+FINAL_WORD = "❇️ aydar.media"
 REPO_URL = "https://timetracker.hse.ru"
 FINAL_URL = "https://timetracker.hse.ru/schedule.aspx?organizationId=1&facultyids=1&course="
-BANLIST = ["История и теория", "Английский язык", "Военная подготовка", "Майнор"]
 BASE_DAY = 4
-COURSES = [1, 2]
+COURSES = [1, 2, 3]
+BANLIST = [
+	"История и теория",
+	"Английский язык",
+	"Военная подготовка",
+	"Майнор",
+	"3D-печать",
+	"Ювелирный дизайн",
+	"Светодизайн",
+	"вариативных",
+	
+]
 
 VERBOSE = "--verbose" in sys.argv
 
