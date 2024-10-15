@@ -14,7 +14,7 @@ import sys
 
 EMAIL = "aetimofeev@edu.hse.ru"
 PWD = "2022"
-GLOBAL_CALENDARS_PATH = "./temp/"
+GLOBAL_CALENDARS_PATH = "/var/www/html/mutt/"
 VERSION = "0.3.2"
 FINAL_WORD = "❇️ aydar.media"
 REPO_URL = "https://timetracker.hse.ru"
